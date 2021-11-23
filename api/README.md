@@ -83,7 +83,7 @@
 
 * Players submit votes
 
-    Note: Their voting for the same guess
+    Note: In this case, they're voting for the same guess. The first player if voting for themself.
 
     * `PUT /games/abc/instances/0/guesses/aa581d07-8ae5-4dfb-890b-8133067f8c8f/vote/3ba05333-ce37-403d-bb2d-8a69681b1558`
 
