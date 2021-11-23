@@ -1,7 +1,7 @@
 
 ## Game API
 
-### New Game: `PUT /games/:id`
+### New Game: `POST /games/:id`
 
 Creates a new game (and VIP player).
 
@@ -13,7 +13,7 @@ Input:
 }
 ```
 
-### Add Player: `PUT /games/:id/players/:name`
+### Add Player: `POST /games/:id/players/:name`
 
 Adds a player to an existing game.
 
