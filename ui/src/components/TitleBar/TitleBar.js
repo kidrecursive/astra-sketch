@@ -10,7 +10,9 @@ const TitleBar = ({ gameId, player, playerCount }) => {
         </Grid>
         <Grid item sx={{ flexShrink: 0, marginTop: 0.5 }}>
           {player && <Typography>{player}</Typography>}
-          {playerCount !== 0 && <Typography>{playerCount} players</Typography>}
+          {playerCount !== 0 && !player && (
+            <Typography>{playerCount} players</Typography>
+          )}
         </Grid>
       </Grid>
       <Divider />

@@ -44,14 +44,14 @@ const Player = () => {
   useGamePollingInterval();
 
   return (
-    <Grid container justify="center">
-      <Grid container direction="column" style={{ maxWidth: 320 }}>
+    <Grid container sx={{ justifyContent: "center" }}>
+      <Grid container sx={{ flexDirection: "column", maxWidth: "320px" }}>
         <TitleBar
           player={player}
           gameId={gameId}
           requestDuration={requestDuration}
         />
-        <Grid container style={{ flexGrow: 1 }} alignItems="center">
+        <Grid container sx={{ flexGrow: 1, alignItems: "center" }}>
           <Grid item>{getPage(page)}</Grid>
         </Grid>
       </Grid>

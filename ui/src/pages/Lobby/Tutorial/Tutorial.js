@@ -31,16 +31,22 @@ const Tutorial = () => {
   }, [gameId, dispatch, store]);
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
+    <Grid
+      container
+      sx={{
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
       <Grid item xs={12}>
         <Typography variant="h6" paragraph>
           Listen, this is easy, just draw fast!
         </Typography>
-        <Typography variant="h6" style={{ marginBottom: 64 }}>
+        <Typography variant="h6" sx={{ marginBottom: 8 }}>
           Then, vote for the correct drawing prompt.
         </Typography>
       </Grid>
-
       <Countdown duration={constants.TUTORIAL_LENGTH} />
     </Grid>
   );

@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Typography } from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
 import { useSelector } from "react-redux";
 import { updateGame } from "../../../api";
 import { selectId, selectPlayer } from "../../../store/gameSlice";
@@ -20,27 +20,23 @@ const AddPlayer = () => {
   if (players && players[player] && players[player].vip) {
     return (
       <React.Fragment>
-        <div style={{ marginBottom: 32 }}>
-          <Typography paragraph variant="caption">
-            Congrats, you're VIP!
-          </Typography>
-          <Button
-            fullWidth
-            disableElevation
-            disabled={startingGame}
-            onClick={startGame}
-            size="large"
-            variant="contained"
-            color="primary"
-          >
-            start game
-          </Button>
-        </div>
-        <Waiting />
+        <Typography paragraph variant="caption">
+          Congrats, you're VIP!
+        </Typography>
+        <Button
+          fullWidth
+          disableElevation
+          disabled={startingGame}
+          onClick={startGame}
+          size="large"
+          variant="contained"
+          color="primary"
+        >
+          start game
+        </Button>
       </React.Fragment>
     );
   }
-
   return <Waiting />;
 };
 

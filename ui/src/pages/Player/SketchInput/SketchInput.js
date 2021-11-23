@@ -37,9 +37,10 @@ const SketchInput = () => {
 
   return (
     <React.Fragment>
-      <Typography paragraph style={{ marginTop: 32 }}>
-        Your Prompt: {playerSketch.prompt}
+      <Typography paragraph variant="caption" color="textSecondary">
+        Your Prompt:
       </Typography>
+      <Typography paragraph>{playerSketch.prompt}</Typography>
       <SketchSurface sendSvg={getSvg} />
     </React.Fragment>
   );

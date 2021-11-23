@@ -48,7 +48,7 @@ const RoundVote = () => {
     const answerVotes = _.pickBy(votes, (vote) =>
       _.keys(sketchAnswers).includes(vote.answer)
     );
-    if (_.keys(players).length - 2 <= _.keys(answerVotes).length) {
+    if (_.keys(players).length - 1 <= _.keys(answerVotes).length) {
       console.log(`voting complete for ${currentSketchId}`);
 
       if (remainingSketchIds.length === 0) {
@@ -81,7 +81,12 @@ const RoundVote = () => {
         </Typography>
       </Grid>
       <Grid item xs={6}>
-        <img alt="Astra Draw" src={getSvgSrc(sketches[currentSketchId].svg)} />
+        <img
+          width="320"
+          height="320"
+          alt="Astra Draw"
+          src={getSvgSrc(sketches[currentSketchId].svg)}
+        />
       </Grid>
       <Grid item xs={6}>
         <List>

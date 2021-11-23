@@ -9,7 +9,7 @@ const styles = {
 };
 
 const SketchSurface = class extends React.Component {
-  state = { strokeColor: "rgb(104, 166, 116)", debug: false };
+  state = { strokeColor: "rgb(104, 166, 116)" };
 
   constructor(props) {
     super(props);
@@ -34,44 +34,16 @@ const SketchSurface = class extends React.Component {
   };
 
   render() {
-    let debugButtons;
-    if (this.state.debug) {
-      debugButtons = (
-        <Grid item>
-          <Grid container spacing={1}>
-            <Grid item>
-              <button
-                onClick={() => {
-                  this.getSvg().then((s) => {
-                    console.log(s);
-                  });
-                }}
-              >
-                SVG
-              </button>
-            </Grid>
-            <Grid item>
-              <button
-                onClick={() => {
-                  this.clear();
-                }}
-              >
-                Clear
-              </button>
-            </Grid>
-          </Grid>
-        </Grid>
-      );
-    }
-
     return (
       <Grid container sx={{ justifyContent: "center" }}>
         <Grid
           container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          style={{ width: 320 }}
+          sx={{
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "320px",
+          }}
           spacing={2}
         >
           <Grid item>
@@ -79,8 +51,8 @@ const SketchSurface = class extends React.Component {
               name="sketch"
               ref={this.canvasRef}
               style={styles}
-              width="400px"
-              height="400px"
+              width="320px"
+              height="320px"
               strokeWidth={4}
               strokeColor={this.state.strokeColor}
             />
@@ -123,19 +95,34 @@ const SketchSurface = class extends React.Component {
                 />
               </Grid>
             </Grid>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <Button
+                  sx={{ mt: 4 }}
+                  fullWidth
+                  disableElevation
+                  size="large"
+                  variant="outlined"
+                  onClick={this.clear}
+                >
+                  clear
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  sx={{ mt: 4 }}
+                  fullWidth
+                  disableElevation
+                  size="large"
+                  variant="contained"
+                  color="primary"
+                  onClick={this.getSvg}
+                >
+                  submit
+                </Button>
+              </Grid>
+            </Grid>
           </Grid>
-          {debugButtons}
-          <Button
-            style={{ marginTop: 32 }}
-            fullWidth
-            disableElevation
-            size="large"
-            variant="contained"
-            color="primary"
-            onClick={this.getSvg}
-          >
-            submit
-          </Button>
         </Grid>
       </Grid>
     );

@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid } from "@mui/material";
+import { getSvgSrc } from "../../../utils";
 import { selectAnswers } from "../../../store/answersSlice";
 import { selectSketches } from "../../../store/sketchesSlice";
 import { selectPlayer, selectId, selectSketch } from "../../../store/gameSlice";
@@ -37,9 +38,12 @@ const RoundVote = () => {
   return (
     <React.Fragment>
       <Grid item xs={12}>
-        <Typography paragraph>
-          {sketches[sketch] && sketches[sketch].content}
-        </Typography>
+        <img
+          width="320"
+          height="320"
+          alt="Astra Draw"
+          src={getSvgSrc(sketches[sketch].svg)}
+        />
       </Grid>
       <Grid item xs={12}>
         {_.keys(sketchAnswers).map((answerId) => (

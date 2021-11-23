@@ -42,7 +42,7 @@ const JoinGame = () => {
           flexDirection: "column",
         }}
       >
-        <Grid item style={{ width: 300, marginBottom: 16 }}>
+        <Grid item sx={{ width: "300px", mb: 2 }}>
           <Typography color="textSecondary">welcome to</Typography>
           <Typography variant="h5" paragraph>
             Astra Draw
@@ -50,17 +50,21 @@ const JoinGame = () => {
         </Grid>
 
         <TextField
-          style={{ marginBottom: 16 }}
+          sx={{ mb: 2 }}
           label="name"
           variant="outlined"
+          fullWidth
           onChange={(e) => setNewPlayer(e.target.value)}
           value={newPlayer}
         />
         <TextField
-          style={{ marginBottom: 16 }}
-          inputProps={{ style: { textTransform: "uppercase" } }}
+          sx={{ mb: 2 }}
+          inputProps={{
+            style: { textTransform: "uppercase", fontFamily: "Special Elite" },
+          }}
           label="game code"
           variant="outlined"
+          fullWidth
           value={newGameId}
           onChange={(e) => setNewGameId(e.target.value)}
         />
