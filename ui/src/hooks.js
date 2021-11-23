@@ -6,18 +6,18 @@ import {
   selectId,
   setPage,
   setRound,
-  setQuestion,
+  setSketch,
   setRequestDuration,
 } from "./store/gameSlice";
 import { addPlayer } from "./store/playersSlice";
-import { slice as questionsSlice } from "./store/questionsSlice";
+import { slice as sketchesSlice } from "./store/sketchesSlice";
 import { slice as answersSlice } from "./store/answersSlice";
 import { slice as votesSlice } from "./store/votesSlice";
 import _ from "lodash";
 
 const gameMapping = {
   answers: answersSlice,
-  questions: questionsSlice,
+  sketches: sketchesSlice,
   votes: votesSlice,
 };
 
@@ -46,8 +46,8 @@ export const useGamePollingInterval = () => {
         if (gameData.game && gameData.game.page) {
           dispatch(setPage(gameData.game.page));
         }
-        if (gameData.game && gameData.game.question) {
-          dispatch(setQuestion(gameData.game.question));
+        if (gameData.game && gameData.game.sketch) {
+          dispatch(setSketch(gameData.game.sketch));
         }
         if (gameData.game && gameData.game.requestDuration) {
           dispatch(setRequestDuration(gameData.game.requestDuration));

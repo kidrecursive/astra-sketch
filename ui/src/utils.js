@@ -8,3 +8,8 @@ export const generateShortId = () =>
   _.sampleSize(constants.SHORT_ID_DICTIONARY, constants.SHORT_ID_LENGTH).join(
     ""
   );
+
+export const getSvgSrc = (svg) => {
+  let blob = new Blob([svg], { type: "image/svg+xml" });
+  return URL.createObjectURL(blob);
+};

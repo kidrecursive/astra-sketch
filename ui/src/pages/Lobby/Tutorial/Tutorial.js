@@ -4,7 +4,7 @@ import { updateGame } from "../../../api";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import { Grid, Typography } from "@mui/material";
 import { selectId } from "../../../store/gameSlice";
-import { initializeQuestionsAndAnswers } from "../../../store/questionsSlice";
+import { initializeSketches } from "../../../store/sketchesSlice";
 import Countdown from "../../../components/Countdown";
 
 const Tutorial = () => {
@@ -13,18 +13,18 @@ const Tutorial = () => {
   const store = useStore();
 
   React.useEffect(() => {
-    const setQuestionsAndAnswers = async () => {
-      dispatch(initializeQuestionsAndAnswers());
-      const { questions, answers } = store.getState();
+    const setSketches = async () => {
+      dispatch(initializeSketches());
+      const { sketches, answers } = store.getState();
       await updateGame(gameId, {
-        questions,
+        sketches,
         answers,
       });
     };
-    setQuestionsAndAnswers();
+    setSketches();
     setTimeout(async () => {
       await updateGame(`${gameId}/game`, {
-        page: constants.ROUND_INPUT_PAGE,
+        page: constants.SKETCH_INPUT_PAGE,
         round: constants.ROUNDS[0].id,
       });
     }, constants.TUTORIAL_LENGTH);
@@ -34,10 +34,10 @@ const Tutorial = () => {
     <Grid container direction="column" justify="center" alignItems="center">
       <Grid item xs={12}>
         <Typography variant="h6" paragraph>
-          Listen, this is easy, just answer the questions.
+          Listen, this is easy, just draw fast!
         </Typography>
         <Typography variant="h6" style={{ marginBottom: 64 }}>
-          Then, vote for your favorites.
+          Then, vote for the correct drawing prompt.
         </Typography>
       </Grid>
 

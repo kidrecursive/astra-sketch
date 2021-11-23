@@ -2,12 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { Button, Grid, Typography } from "@mui/material";
 import { selectAnswers } from "../../../store/answersSlice";
-import { selectQuestions } from "../../../store/questionsSlice";
-import {
-  selectPlayer,
-  selectId,
-  selectQuestion,
-} from "../../../store/gameSlice";
+import { selectSketches } from "../../../store/sketchesSlice";
+import { selectPlayer, selectId, selectSketch } from "../../../store/gameSlice";
 import { updateGame } from "../../../api";
 import Waiting from "../Waiting";
 import _ from "lodash";
@@ -15,29 +11,26 @@ import _ from "lodash";
 const RoundVote = () => {
   const gameId = useSelector(selectId);
   const player = useSelector(selectPlayer);
-  const currentQuestionId = useSelector(selectQuestion);
-  const questions = useSelector(selectQuestions);
+  const sketch = useSelector(selectSketch);
+  const sketches = useSelector(selectSketches);
   const answers = useSelector(selectAnswers);
-  const questionAnswers = _.pickBy(
+  const sketchAnswers = _.pickBy(
     answers,
-    (answer) => answer.question === currentQuestionId
+    (answer) => answer.sketch === sketch && answer.player !== player
   );
-  const [votedQuestions, setVotedQuestions] = React.useState([]);
+  const [voted, setVoted] = React.useState(false);
 
   const sendVote = (answerId) => {
-    setVotedQuestions(votedQuestions.concat([currentQuestionId]));
     updateGame(`${gameId}/votes`, {
-      [`${player}-${currentQuestionId}`]: {
+      [`${player}-${sketch}`]: {
         player,
         answer: answerId,
       },
     });
+    setVoted(true);
   };
 
-  if (
-    votedQuestions.includes(currentQuestionId) ||
-    !_.isEmpty(_.pickBy(questionAnswers, (answer) => answer.player === player))
-  ) {
+  if (voted || sketches[sketch].player === player) {
     return <Waiting />;
   }
 
@@ -45,18 +38,18 @@ const RoundVote = () => {
     <React.Fragment>
       <Grid item xs={12}>
         <Typography paragraph>
-          {questions[currentQuestionId] && questions[currentQuestionId].content}
+          {sketches[sketch] && sketches[sketch].content}
         </Typography>
       </Grid>
       <Grid item xs={12}>
-        {_.keys(questionAnswers).map((answerId) => (
+        {_.keys(sketchAnswers).map((answerId) => (
           <Button
             key={answerId}
             style={{ marginTop: 16 }}
             fullWidth
             disableElevation
+            disabled={voted}
             size="large"
-            disabled={votedQuestions.includes(currentQuestionId)}
             variant="contained"
             color="primary"
             onClick={() => sendVote(answerId)}

@@ -4,6 +4,7 @@ import constants from "../../constants";
 import { Grid } from "@mui/material";
 import AddPlayers from "../../pages/Lobby/AddPlayers";
 import Tutorial from "../../pages/Lobby/Tutorial";
+import SketchInput from "../../pages/Lobby/SketchInput";
 import RoundInput from "../../pages/Lobby/RoundInput";
 import RoundVote from "../../pages/Lobby/RoundVote";
 import RoundScore from "../../pages/Lobby/RoundScore";
@@ -19,6 +20,8 @@ const getPage = (page) => {
       return <AddPlayers />;
     case constants.TUTORIAL_PAGE:
       return <Tutorial />;
+    case constants.SKETCH_INPUT_PAGE:
+      return <SketchInput />;
     case constants.ROUND_INPUT_PAGE:
       return <RoundInput />;
     case constants.ROUND_VOTE_PAGE:

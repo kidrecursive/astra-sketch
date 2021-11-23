@@ -1,79 +1,57 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { Button, TextField, Typography } from "@mui/material";
-import { selectQuestions } from "../../../store/questionsSlice";
 import { selectAnswers } from "../../../store/answersSlice";
-import { selectRound, selectPlayer, selectId } from "../../../store/gameSlice";
+import { selectPlayer, selectId, selectSketch } from "../../../store/gameSlice";
+import { selectSketches } from "../../../store/sketchesSlice";
 import { updateGame } from "../../../api";
-import constants from "../../../constants";
 import Waiting from "../Waiting";
 import _ from "lodash";
 
 const RoundInput = () => {
-  const questions = useSelector(selectQuestions);
+  const sketches = useSelector(selectSketches);
+  const sketch = useSelector(selectSketch);
   const answers = useSelector(selectAnswers);
-  const roundId = useSelector(selectRound);
   const player = useSelector(selectPlayer);
   const gameId = useSelector(selectId);
-  const currentRound = constants.ROUNDS.find((round) => round.id === roundId);
-  const playerAnswers = _.pickBy(answers, (answer, answerId) => {
-    return (
-      answer.player === player &&
-      questions[answers[answerId].question].round === roundId
-    );
+  const playerAnswerPick = _.pickBy(answers, (answer) => {
+    return answer.player === player && answer.sketch === sketch;
   });
-  const [response, setResponse] = React.useState(_.cloneDeep(playerAnswers));
+  const playerAnswer = playerAnswerPick[_.keys(playerAnswerPick)[0]];
+  const [response, setResponse] = React.useState("");
   const [responseSent, setResponseSent] = React.useState(false);
-  const [buttonDisabled, setButtonDisabled] = React.useState(false);
 
   const submitResponse = async () => {
     setResponseSent(true);
-    await updateGame(`${gameId}/answers`, response);
+    await updateGame(`${gameId}/answers`, {
+      [playerAnswer.id]: {
+        ...playerAnswer,
+        content: response,
+      },
+    });
   };
 
-  React.useEffect(() => {
-    let disabled = false;
-    _.keys(response).forEach((responseKey) => {
-      if (!response[responseKey].content) {
-        disabled = true;
-      }
-    });
-    setButtonDisabled(disabled);
-  }, [response]);
-
-  if (responseSent) {
+  if (responseSent || sketches[sketch].player === player) {
     return <Waiting />;
   }
 
   return (
     <React.Fragment>
-      <Typography variant="h5" paragraph>
-        {currentRound && currentRound.title}
+      <Typography paragraph style={{ marginTop: 32 }}>
+        What is this thing?
       </Typography>
-      {_.keys(playerAnswers).map((answerId) => (
-        <React.Fragment key={answerId}>
-          <Typography paragraph style={{ marginTop: 32 }}>
-            {questions[answers[answerId].question].content}
-          </Typography>
-          <TextField
-            label="response"
-            variant="outlined"
-            value={response[answerId].content || ""}
-            onChange={(e) =>
-              setResponse({
-                ...response,
-                [answerId]: { ...response[answerId], content: e.target.value },
-              })
-            }
-          />
-        </React.Fragment>
-      ))}
+      <TextField
+        label="response"
+        variant="outlined"
+        value={response || ""}
+        onChange={(e) => setResponse(e.target.value)}
+      />
       <Button
         style={{ marginTop: 32 }}
         fullWidth
         disableElevation
         size="large"
-        disabled={buttonDisabled}
+        disabled={!response}
         variant="contained"
         color="primary"
         onClick={submitResponse}

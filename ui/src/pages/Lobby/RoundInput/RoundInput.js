@@ -1,11 +1,12 @@
 import React from "react";
 import constants from "../../../constants";
 import { updateGame } from "../../../api";
+import { getSvgSrc } from "../../../utils";
 import { useSelector } from "react-redux";
 import { Grid, Typography } from "@mui/material";
-import { selectId, selectRound } from "../../../store/gameSlice";
+import { selectId, selectRound, selectSketch } from "../../../store/gameSlice";
 import { selectAnswers } from "../../../store/answersSlice";
-import { selectQuestions } from "../../../store/questionsSlice";
+import { selectSketches } from "../../../store/sketchesSlice";
 import Countdown from "../../../components/Countdown";
 import _ from "lodash";
 
@@ -13,21 +14,21 @@ const RoundInput = () => {
   const gameId = useSelector(selectId);
   const roundId = useSelector(selectRound);
   const answers = useSelector(selectAnswers);
-  const questions = useSelector(selectQuestions);
+  const sketches = useSelector(selectSketches);
+  const sketch = useSelector(selectSketch);
   const [shouldTransition, setShouldTransition] = React.useState(false);
 
-  React.useEffect(() => {
-    const expiredTimeout = setTimeout(() => {
-      setShouldTransition(true);
-    }, constants.ROUND_INPUT_TIMER);
-    return () => clearTimeout(expiredTimeout);
-  }, []);
+  // React.useEffect(() => {
+  //   const expiredTimeout = setTimeout(() => {
+  //     setShouldTransition(true);
+  //   }, constants.ROUND_INPUT_TIMER);
+  //   return () => clearTimeout(expiredTimeout);
+  // }, []);
 
   React.useEffect(() => {
     const roundAnswers = _.pickBy(answers, (answer, answerId) => {
-      return questions[answers[answerId].question].round === roundId;
+      return answers[answerId].sketch === sketch;
     });
-
     let transition = true;
     _.keys(roundAnswers).forEach((roundAnswerId) => {
       if (!roundAnswers[roundAnswerId].content) {
@@ -35,27 +36,29 @@ const RoundInput = () => {
       }
     });
     setShouldTransition(transition);
-  }, [answers, questions, roundId, gameId]);
+  }, [answers, sketches, roundId, gameId]);
 
-  React.useEffect(() => {
+  React.useEffect(async () => {
     if (shouldTransition) {
-      const roundQuestionIds = _.keys(
-        _.pickBy(questions, (question) => question.round === roundId)
-      );
-      updateGame(`${gameId}/game`, {
+      await updateGame(`${gameId}/sketches`, {
+        [sketch]: {
+          ...sketches[sketch],
+          answered: true,
+        },
+      });
+      await updateGame(`${gameId}/game`, {
         page: constants.ROUND_VOTE_PAGE,
-        question: roundQuestionIds[0],
       });
     }
-  }, [gameId, shouldTransition, questions, roundId]);
+  }, [gameId, shouldTransition, sketches, roundId]);
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">
       <Grid item xs={6}>
-        <Typography paragraph>
-          Two statements have been sent to your device, hurry up and fill them
-          in!
-        </Typography>
+        <Typography paragraph>What is this thing?</Typography>
+      </Grid>
+      <Grid item xs={12}>
+        <img alt="Astra Draw" src={getSvgSrc(sketches[sketch].svg)} />
       </Grid>
       <Grid item xs={12}>
         <Countdown duration={constants.ROUND_INPUT_TIMER} />

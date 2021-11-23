@@ -1,18 +1,15 @@
 import React from "react";
 import constants from "../../../constants";
 import { updateGame } from "../../../api";
+import { getSvgSrc } from "../../../utils";
 import { useSelector } from "react-redux";
 import { selectAnswers } from "../../../store/answersSlice";
-import { selectQuestions } from "../../../store/questionsSlice";
+import { selectSketches } from "../../../store/sketchesSlice";
 import { selectVotes } from "../../../store/votesSlice";
 import { selectPlayers } from "../../../store/playersSlice";
 import { useTheme } from "@mui/material/styles";
 import _ from "lodash";
-import {
-  selectId,
-  selectRound,
-  selectQuestion,
-} from "../../../store/gameSlice";
+import { selectId, selectRound, selectSketch } from "../../../store/gameSlice";
 import {
   Divider,
   Grid,
@@ -32,44 +29,38 @@ const countVotes = (votes, answerId) => {
 const RoundVote = () => {
   const gameId = useSelector(selectId);
   const roundId = useSelector(selectRound);
-  const currentQuestionId = useSelector(selectQuestion);
+  const currentSketchId = useSelector(selectSketch);
   const currentRound = constants.ROUNDS.find((round) => round.id === roundId);
   const answers = useSelector(selectAnswers);
   const players = useSelector(selectPlayers);
-  const questions = useSelector(selectQuestions);
+  const sketches = useSelector(selectSketches);
   const votes = useSelector(selectVotes);
-  const [votedQuestions, setVotedQuestions] = React.useState([]);
   const theme = useTheme();
+  const remainingSketchIds = _.keys(
+    _.pickBy(sketches, (sketch) => sketch.round === roundId && !sketch.answered)
+  );
 
   React.useEffect(() => {
-    const roundQuestions = _.pickBy(
-      questions,
-      (question) => question.round === roundId
-    );
-    const questionAnswers = _.pickBy(
+    const sketchAnswers = _.pickBy(
       answers,
-      (answer) => answer.question === currentQuestionId
+      (answer) => answer.sketch === currentSketchId
     );
     const answerVotes = _.pickBy(votes, (vote) =>
-      _.keys(questionAnswers).includes(vote.answer)
+      _.keys(sketchAnswers).includes(vote.answer)
     );
     if (_.keys(players).length - 2 <= _.keys(answerVotes).length) {
-      console.log(`voting complete for ${currentQuestionId}`);
-      const newVotedQuestions = votedQuestions.concat([currentQuestionId]);
-      setVotedQuestions(newVotedQuestions);
-      const remaingQuestions = _.difference(
-        _.keys(roundQuestions),
-        newVotedQuestions
-      );
-      if (remaingQuestions.length === 0) {
+      console.log(`voting complete for ${currentSketchId}`);
+
+      if (remainingSketchIds.length === 0) {
         console.log(`round complete: ${roundId}`);
         updateGame(`${gameId}/game`, {
           page: constants.ROUND_SCORE_PAGE,
-          question: "",
+          sketch: "",
         });
       } else {
         updateGame(`${gameId}/game`, {
-          question: remaingQuestions[0],
+          page: constants.ROUND_INPUT_PAGE,
+          sketch: remainingSketchIds[0],
         });
       }
     }
@@ -89,15 +80,16 @@ const RoundVote = () => {
           {currentRound && currentRound.title}
         </Typography>
       </Grid>
-      <Grid item xs={12}>
-        <Typography variant="h6" paragraph>
-          {questions[currentQuestionId] && questions[currentQuestionId].content}
-        </Typography>
+      <Grid item xs={6}>
+        <img alt="Astra Draw" src={getSvgSrc(sketches[currentSketchId].svg)} />
       </Grid>
-      <Grid item xs={12}>
+      <Grid item xs={6}>
         <List>
+          <ListItem>
+            <ListItemText secondary="votes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;answer" />
+          </ListItem>
           {_.keys(
-            _.pickBy(answers, (answer) => answer.question === currentQuestionId)
+            _.pickBy(answers, (answer) => answer.sketch === currentSketchId)
           ).map((answerId) => (
             <ListItem key={answerId}>
               <ListItemAvatar>

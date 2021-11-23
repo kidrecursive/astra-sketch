@@ -8,6 +8,7 @@ import {
   selectRequestDuration,
 } from "../../store/gameSlice";
 import AddPlayers from "../../pages/Player/AddPlayer";
+import SketchInput from "../../pages/Player/SketchInput";
 import RoundInput from "../../pages/Player/RoundInput";
 import RoundVote from "../../pages/Player/RoundVote";
 import Waiting from "../../pages/Player/Waiting";
@@ -22,6 +23,8 @@ const getPage = (page) => {
       return <AddPlayers />;
     case constants.TUTORIAL_PAGE:
       return <React.Fragment />;
+    case constants.SKETCH_INPUT_PAGE:
+      return <SketchInput />;
     case constants.ROUND_INPUT_PAGE:
       return <RoundInput />;
     case constants.ROUND_VOTE_PAGE:

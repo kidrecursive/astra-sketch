@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { updateGame } from "../../../api";
 import { selectPlayers } from "../../../store/playersSlice";
 import { selectAnswers } from "../../../store/answersSlice";
-import { selectQuestions } from "../../../store/questionsSlice";
+import { selectSketches } from "../../../store/sketchesSlice";
 import { selectVotes } from "../../../store/votesSlice";
 import PlayerList from "../../../components/PlayerList";
 import { Grid } from "@mui/material";
@@ -24,16 +24,16 @@ const RoundScore = () => {
   const currentRound = constants.ROUNDS.find((round) => round.id === roundId);
   const audienceSize = useSelector(selectAudienceSize);
   const answers = useSelector(selectAnswers);
-  const questions = useSelector(selectQuestions);
+  const sketches = useSelector(selectSketches);
   const votes = useSelector(selectVotes);
 
   const updateScore = () => {
-    const roundQuestions = _.pickBy(
-      questions,
-      (question) => question.round === roundId
+    const roundSketches = _.pickBy(
+      sketches,
+      (sketch) => sketch.round === roundId
     );
     const roundAnswers = _.pickBy(answers, (answer) =>
-      _.keys(roundQuestions).includes(answer.question)
+      _.keys(roundSketches).includes(answer.sketch)
     );
     const roundVotes = _.pickBy(votes, (vote) =>
       _.keys(roundAnswers).includes(vote.answer)
@@ -53,7 +53,7 @@ const RoundScore = () => {
     setTimeout(() => {
       let next = { page: constants.FINAL_PAGE, round: "" };
       if (nextRound <= constants.ROUNDS.length) {
-        next = { page: constants.ROUND_INPUT_PAGE, round: nextRound };
+        next = { page: constants.SKETCH_INPUT_PAGE, round: nextRound };
       }
       updateGame(`${gameId}/game`, next);
       if (next.page === constants.FINAL_PAGE) {

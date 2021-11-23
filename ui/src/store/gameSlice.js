@@ -2,15 +2,15 @@ import { createSlice } from "@reduxjs/toolkit";
 import constants from "../constants";
 import { slice as appSlice } from "./appSlice";
 import { slice as playersSlice } from "./playersSlice";
-import { slice as questionsSlice } from "./questionsSlice";
 import { slice as answersSlice } from "./answersSlice";
+import { slice as sketchesSlice } from "./sketchesSlice";
 
 export const initialState = {
   id: "",
   audienceSize: 0,
   page: "",
   round: "",
-  question: "",
+  sketch: "",
   player: "",
   requestDuration: 0,
 };
@@ -29,8 +29,8 @@ export const slice = createSlice({
     setRound: (state, action) => {
       state.round = action.payload;
     },
-    setQuestion: (state, action) => {
-      state.question = action.payload;
+    setSketch: (state, action) => {
+      state.sketch = action.payload;
     },
     setPlayer: (state, action) => {
       state.player = action.payload;
@@ -55,7 +55,7 @@ export const resetGame = () => {
     dispatch(slice.actions.reset());
     dispatch(appSlice.actions.reset());
     dispatch(playersSlice.actions.reset());
-    dispatch(questionsSlice.actions.reset());
+    dispatch(sketchesSlice.actions.reset());
     dispatch(answersSlice.actions.reset());
     localStorage.removeItem(constants.LOCAL_STORAGE_KEY);
   };
@@ -65,7 +65,7 @@ export const {
   initialize,
   setPage,
   setRound,
-  setQuestion,
+  setSketch,
   setPlayer,
   setId,
   setRequestDuration,
@@ -75,7 +75,7 @@ export const {
 export const selectId = (state) => state.game.id;
 export const selectPage = (state) => state.game.page;
 export const selectRound = (state) => state.game.round;
-export const selectQuestion = (state) => state.game.question;
+export const selectSketch = (state) => state.game.sketch;
 export const selectAudienceSize = (state) => state.game.audienceSize;
 export const selectPlayer = (state) => state.game.player;
 export const selectRequestDuration = (state) => state.game.requestDuration;

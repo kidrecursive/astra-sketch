@@ -3,7 +3,7 @@ import persistState from "redux-localstorage";
 import appReducer from "./appSlice";
 import gameReducer from "./gameSlice";
 import playersReducer from "./playersSlice";
-import questionsReducer from "./questionsSlice";
+import sketchesReducer from "./sketchesSlice";
 import answersReducer from "./answersSlice";
 import votesReducer from "./votesSlice";
 
@@ -11,7 +11,7 @@ export const reducers = combineReducers({
   app: appReducer,
   game: gameReducer,
   players: playersReducer,
-  questions: questionsReducer,
+  sketches: sketchesReducer,
   answers: answersReducer,
   votes: votesReducer,
 });
