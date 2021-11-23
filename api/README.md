@@ -18,7 +18,7 @@
     * Add players `POST /games/ABCD/player/Chris` (generated UUID: 3ba05333-ce37-403d-bb2d-8a69681b1558)
     * Add players `POST /games/ABCD/player/Danielle` (generated UUID: aa581d07-8ae5-4dfb-890b-8133067f8c8f)
 
-* VIP creates topics `POST
+* VIP creates topics
 
 
     `POST /games/instances/0`
@@ -56,6 +56,7 @@
 * VIP updates games topic/state for players to guess
 
     `PUT /games/ABCD/topic/aa581d07-8ae5-4dfb-890b-8133067f8c8f`
+
     `PUT /games/ABCD/state/GUESS`
 
 * Players submit guesses
