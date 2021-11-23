@@ -23,7 +23,8 @@ router.get('/:id', function(req, res, next) {
 // New game
 router.post('/:id', function(req, res, next) {
     if (req.body.vip) {
-        const vip = new sg.Value().setUuid(new sg.Uuid().setValue(uuid.parse(uuid.v4())));
+        const playerId = uuid.v4();
+        const vip = new sg.Value().setUuid(new sg.Uuid().setValue(uuid.parse(playerId)));
         const id = new sg.Value().setString(req.params.id);
         const name = new sg.Value().setString(req.body.vip);
 
@@ -49,7 +50,8 @@ router.post('/:id', function(req, res, next) {
 
         grpc.client.executeBatch(batch).then((response) => {
             publishGameChange(req.params.id);
-            res.status(200).end();
+            res.status(200).write(JSON.stringify({ player: playerId }));
+            res.end();
         }).catch((err) => {
             res.status(500).render('error', { message: "Error attempting to add new game", error: err });
         });
