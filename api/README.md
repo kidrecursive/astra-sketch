@@ -6,7 +6,7 @@
 
 * VIP creates game: 
 
-    `POST /games/ABCD`
+    `POST /games/ABCD` (generated UUID for VIP: dd5bfce3-de86-46ca-8bb9-8b43c9060999)
 
     ```
     {
@@ -27,7 +27,7 @@
 
     ```
     {
-        "players": [ "3ba05333-ce37-403d-bb2d-8a69681b1558", "aa581d07-8ae5-4dfb-890b-8133067f8c8f" ]
+        "players": [ "3ba05333-ce37-403d-bb2d-8a69681b1558", "aa581d07-8ae5-4dfb-890b-8133067f8c8f", "dd5bfce3-de86-46ca-8bb9-8b43c9060999" ]
     }
     ```
 
@@ -37,6 +37,7 @@
 
 
 * Players upload SVGs
+
     * `PUT /localhost:3000/games/ABCD/instances/0/topics/3ba05333-ce37-403d-bb2d-8a69681b1558/svg`
 
         ```
@@ -46,6 +47,14 @@
         ```
 
     * `PUT /localhost:3000/games/ABCD/instances/0/topics/aa581d07-8ae5-4dfb-890b-8133067f8c8f/svg`
+
+        ```
+        {
+            "svg": "<svg data>"
+        }
+        ```
+
+    * `PUT /localhost:3000/games/ABCD/instances/0/topics/dd5bfce3-de86-46ca-8bb9-8b43c9060999/svg`
 
         ```
         {
@@ -77,6 +86,14 @@
         }
         ```
 
+    * `PUT /games/abc/instances/0/guesses/aa581d07-8ae5-4dfb-890b-8133067f8c8f/guess/dd5bfce3-de86-46ca-8bb9-8b43c9060999`
+
+        ```
+        {
+            "guess": "Non-creative Guess"
+        }
+        ```
+
 * VIP updates games state for players to vote on guessses
 
     `PUT /games/ABCD/state/VOTE`
@@ -98,6 +115,14 @@
         ```
         {
             "player": "aa581d07-8ae5-4dfb-890b-8133067f8c8f"
+        }
+        ```
+
+    * `PUT /games/abc/instances/0/guesses/aa581d07-8ae5-4dfb-890b-8133067f8c8f/vote/3ba05333-ce37-403d-bb2d-8a69681b1558`
+
+        ```
+        {
+            "player": "dd5bfce3-de86-46ca-8bb9-8b43c9060999"
         }
         ```
 
