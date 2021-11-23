@@ -21,7 +21,7 @@
 * VIP creates topics
 
 
-    `POST /games/instances/0`
+    `POST /games/ABCD/instances/0`
 
     Note: Use uuids of players pulled from game object state
 

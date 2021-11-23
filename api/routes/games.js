@@ -162,6 +162,19 @@ router.post('/:id/instances/:num', function(req, res, next) {
             }
         });
 
+        const query = new sg.Query();
+        const values = new sg.Values();
+
+        const id = new sg.Value().setString(req.params.id);
+        const num = new sg.Value().setInt(req.params.num);
+
+        values.addValues(num);
+        values.addValues(id);
+        query.setCql(`UPDATE ${config.KEYSPACE}.game SET game_num = ? WHERE game_id = ?`);
+        query.setValues(values);
+
+        batch.addQueries(query);
+
         grpc.client.executeBatch(batch).then((response) => {
             publishGameChange(req.params.id);
             res.status(200).end();
