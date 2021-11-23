@@ -79,7 +79,7 @@ router.put('/:id/topic/:topicPlayerId', function(req, res, next) {
     });
 });
 
-// Update topic
+// Update game state
 router.put('/:id/state/:state', function(req, res, next) {
     const id = new sg.Value().setString(req.params.id);
     const state = new sg.Value().setString(req.params.state);
@@ -104,16 +104,21 @@ router.post('/:id/players/:name', function(req, res, next) {
     const id = new sg.Value().setString(req.params.id);
     const name = new sg.Value().setString(req.params.name);
 
+    const playerId = uuid.v4();
+    const playerIdVal = new sg.Value().setUuid(new sg.Uuid().setValue(uuid.parse(playerId)));
+
     const values = new sg.Values();
     values.addValues(id);
+    values.addValues(playerIdVal);
     values.addValues(name);
 
     const query = new sg.Query();
-    query.setCql(`INSERT INTO ${config.KEYSPACE}.players (game_id, player_id, name) VALUES (?, uuid(), ?)`);
+    query.setCql(`INSERT INTO ${config.KEYSPACE}.players (game_id, player_id, name) VALUES (?, ?, ?)`);
     query.setValues(values);
     grpc.client.executeQuery(query).then((response) => {
         publishGameChange(req.params.id);
-        res.status(200).end();
+        res.status(200).write(JSON.stringify({player: playerId}));
+        res.end();
     }).catch((err) => {
         res.status(500).render('error', { message: "Error attempting to add new player", error: err });
     });
