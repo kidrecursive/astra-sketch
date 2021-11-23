@@ -1,19 +1,32 @@
 <html>
     <header>
         <script>
-                fetch("/games/abc").then(res =>  res.json()).then(data => {
-                    const gameDiv = document.getElementById("game");
-                    gameDiv.innerHTML = JSON.stringify(data);
-                });
-                const eventSource = new EventSource("/stream/abc");
+        var eventSource;
+        function onChange() {
+            let value = document.getElementById("gameId").value;
+
+            if (eventSource) {
+                eventSource.close();
+            }
+
+            fetch(`/games/${value}`).then(res => res.json()).then(data => {
+                const gameDiv = document.getElementById("game");
+                gameDiv.innerHTML = JSON.stringify(data, null, 2);
+
+                eventSource = new EventSource(`/stream/${value}`);
                 eventSource.onmessage = function (event) {
                     const gameDiv = document.getElementById("game");
-                    gameDiv.innerHTML = event.data;
+                    gameDiv.innerHTML = JSON.stringify(JSON.parse(event.data), null, 2);
                 }
+            });
+
+        }
         </script>
     </header>
     <body>
-        <h2>Data:</h2>
-        <div id="game"></div>
+        <p>GameID:</p>
+        <input id="gameId" onchange="onChange()" value=""/>
+        <p>Data:</p>
+        <pre id="game">{}</pre>
     </body>
 </html>

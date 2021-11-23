@@ -8,6 +8,10 @@ const consumer = new WebSocketClient();
 
 const subscribers = {};
 
+function connectConsumer() {
+    consumer.connect(config.ASTRA_STREAMING_TOPIC, null, null, { "Authorization": authHeader });
+}
+
 consumer.on('connectFailed', function (error) {
     console.log('Connect Error: ' + error.toString());
 });
@@ -18,6 +22,7 @@ consumer.on('connect', function (connection) {
         console.log("Connection Error: " + error.toString());
     });
     connection.on('close', function () {
+        connectConsumer(); // Reconnect because sometimes the consumer disconnects. Not sure why?
         console.log('Consumer Connection Closed');
     });
     connection.on('message', function (message) {
@@ -47,8 +52,6 @@ consumer.on('connect', function (connection) {
         }
     });
 });
-
-consumer.connect(config.ASTRA_STREAMING_TOPIC, null, null, { "Authorization": authHeader });
 
 function publishGameChange(gameId) {
     const publisher = new WebSocketClient();
@@ -82,6 +85,8 @@ function unsubscribe(gameId, res) {
         }
     }
 }
+
+connectConsumer();
 
 module.exports.subscribe = subscribe;
 module.exports.unsubscribe = unsubscribe;
