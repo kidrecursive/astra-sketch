@@ -8,7 +8,7 @@ var { publishGameChange } = require('../pulsar')
 var router = express.Router();
 
 var grpc = require("../grpc");
-const { generateTopic } = require('../../ui/src/utils');
+const { generateTopic } = require('../utils');
 
 // Get full game state object
 router.get('/:id', function(req, res, next) {

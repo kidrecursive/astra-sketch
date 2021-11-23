@@ -58,12 +58,12 @@ async function getGame(gameId) {
   const gameRes = await client.executeQuery(gameQuery);
   const playerRes = await client.executeQuery(playerQuery);
 
-  if (gameRes.hasResultSet() && gameRes.getResultSet().getRowsList()) {
+  if (gameRes.hasResultSet() && gameRes.getResultSet().getRowsList().length > 0) {
     const game = JSON.parse(gameRes.getResultSet().getRowsList()[0].getValuesList()[0].getString());
     const gameNum = game.game_num;
 
     const players = [];
-    if (playerRes.hasResultSet() && playerRes.getResultSet().getRowsList()) {
+    if (playerRes.hasResultSet() && playerRes.getResultSet().getRowsList().length > 0) {
       playerRes.getResultSet().getRowsList().forEach(row => {
         players.push(JSON.parse(row.getValuesList()[0].getString()));
       });
@@ -76,7 +76,7 @@ async function getGame(gameId) {
     const topicsRes = await client.executeQuery(topicsQuery);
 
     const topics = [];
-    if (topicsRes.hasResultSet() && topicsRes.getResultSet().getRowsList()) {
+    if (topicsRes.hasResultSet() && topicsRes.getResultSet().getRowsList().length > 0) {
       topicsRes.getResultSet().getRowsList().forEach(row => {
         topics.push(JSON.parse(row.getValuesList()[0].getString()));
       });
@@ -89,7 +89,7 @@ async function getGame(gameId) {
     const guessesRes = await client.executeQuery(guessesQuery);
 
     const guesses = [];
-    if (guessesRes.hasResultSet() && guessesRes.getResultSet().getRowsList()) {
+    if (guessesRes.hasResultSet() && guessesRes.getResultSet().getRowsList().length > 0) {
       guessesRes.getResultSet().getRowsList().forEach(row => {
         guesses.push(JSON.parse(row.getValuesList()[0].getString()));
       });
