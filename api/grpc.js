@@ -28,6 +28,7 @@ async function createSchema() {
     `CREATE TABLE IF NOT EXISTS ${keyspace}.players 
       (gameid text, 
        name text, 
+       vip boolean,
        score int,
        PRIMARY KEY(gameid, name))`));
   await client.executeQuery(new sg.Query().setCql(

@@ -23,7 +23,8 @@ const RoundVote = () => {
 
   const sendVote = (answerId) => {
     upsertVote(gameId, {
-      player,
+      id: `${player}-${answerId}`,
+      player: player,
       answer: answerId,
     });
     setVoted(true);

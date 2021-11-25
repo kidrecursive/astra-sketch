@@ -41,10 +41,8 @@ const RoundInput = () => {
   React.useEffect(async () => {
     if (shouldTransition) {
       await upsertSketch(gameId, {
-        [sketch]: {
-          ...sketches[sketch],
-          answered: true,
-        },
+        ...sketches[sketch],
+        answered: true,
       });
       await updateGame(gameId, {
         page: constants.ROUND_VOTE_PAGE,

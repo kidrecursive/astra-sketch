@@ -37,7 +37,8 @@ router.put('/:id', function(req, res, next) {
         query.setCql(`INSERT INTO ${config.KEYSPACE}.game JSON '${JSON.stringify(req.body)}' DEFAULT UNSET`);
         grpc.client.executeQuery(query).then((response) => {
             publishGameChange(req.params.id);
-            res.status(200).end();
+            res.status(200).write(JSON.stringify({}));
+            res.end();
         }).catch((err) => {
             res.status(500).render('error', { message: "Error attempting to add new game", error: err });
         });
@@ -111,7 +112,8 @@ router.put('/:id/players', function(req, res, next) {
             });
             grpc.client.executeBatch(batch).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new players", error: err });
             });
@@ -121,7 +123,8 @@ router.put('/:id/players', function(req, res, next) {
             query.setCql(`INSERT INTO ${config.KEYSPACE}.players JSON '${JSON.stringify(body)}' DEFAULT UNSET`);
             grpc.client.executeQuery(query).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new player", error: err });
             });
@@ -147,7 +150,8 @@ router.put('/:id/sketches', function(req, res, next) {
             });
             grpc.client.executeBatch(batch).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new sketches", error: err });
             });
@@ -157,7 +161,8 @@ router.put('/:id/sketches', function(req, res, next) {
             query.setCql(`INSERT INTO ${config.KEYSPACE}.sketches JSON '${JSON.stringify(body)}' DEFAULT UNSET`);
             grpc.client.executeQuery(query).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new sketch", error: err });
             });
@@ -182,7 +187,8 @@ router.put('/:id/answers', function(req, res, next) {
             });
             grpc.client.executeBatch(batch).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new answer", error: err });
             });
@@ -192,7 +198,8 @@ router.put('/:id/answers', function(req, res, next) {
             query.setCql(`INSERT INTO ${config.KEYSPACE}.answers JSON '${JSON.stringify(body)}' DEFAULT UNSET`);
             grpc.client.executeQuery(query).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new answer", error: err });
             });
@@ -217,7 +224,8 @@ router.put('/:id/votes', function(req, res, next) {
             });
             grpc.client.executeBatch(batch).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new votes", error: err });
             });
@@ -227,7 +235,8 @@ router.put('/:id/votes', function(req, res, next) {
             query.setCql(`INSERT INTO ${config.KEYSPACE}.votes JSON '${JSON.stringify(body)}' DEFAULT UNSET`);
             grpc.client.executeQuery(query).then((response) => {
                 publishGameChange(req.params.id);
-                res.status(200).end();
+                res.status(200).write(JSON.stringify({}));
+                res.end();
             }).catch((err) => {
                 res.status(500).render('error', { message: "Error attempting to add new vote", error: err });
             });

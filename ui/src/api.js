@@ -1,36 +1,45 @@
 import store from "./store";
 import _ from "lodash";
 
-const apiPath = "/";
+const apiPath = "/games";
 
 export const getGame = async (path) => {
-  const res = await fetch(`${apiPath}/games/${path}`);
+  const res = await fetch(`${apiPath}/${path}`);
   return await res.json();
 };
 
 export const createGame = async (gameId) => {
   const filteredGame = _.omit(store.getState(), ["app", "game.player"]);
-  const res = await fetch(`${apiPath}/games/${gameId}`, {
+  const res = await fetch(`${apiPath}/${gameId}`, {
     method: "PUT",
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({ ...filteredGame.game }),
   });
   return await res.json();
 };
 
 export const updateGame = async (gameId, update) => {
-  const res = await fetch(`${apiPath}/games/${gameId}`, {
+  const res = await fetch(`${apiPath}/${gameId}`, {
     method: "PUT",
-    body: JSON.stringify({ update }),
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id: gameId, ...update }),
   });
   return await res.json();
 };
 
-export const upsertPlayer = async (gameId, playerId) => {
+export const upsertPlayer = async (gameId, playerObj) => {
   const res = await fetch(
-    `${apiPath}/games/${gameId}/players`,
+    `${apiPath}/${gameId}/players`,
     {
       method: "PUT",
-      body: JSON.stringify({ name: playerId }),
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(playerObj),
     }
   );
   return await res.json();
@@ -39,9 +48,12 @@ export const upsertPlayer = async (gameId, playerId) => {
 
 export const upsertSketch = async (gameId, sketchObj) => {
   const res = await fetch(
-    `${apiPath}/games/${gameId}/sketches`,
+    `${apiPath}/${gameId}/sketches`,
     {
       method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(sketchObj),
     }
   );
@@ -50,9 +62,12 @@ export const upsertSketch = async (gameId, sketchObj) => {
 
 export const upsertAnswer = async (gameId, answerObj) => {
   const res = await fetch(
-    `${apiPath}/games/${gameId}/answers`,
+    `${apiPath}/${gameId}/answers`,
     {
       method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(answerObj),
     }
   );
@@ -61,9 +76,12 @@ export const upsertAnswer = async (gameId, answerObj) => {
 
 export const upsertVote = async (gameId, voteObj) => {
   const res = await fetch(
-    `${apiPath}/games/${gameId}/votes`,
+    `${apiPath}/${gameId}/votes`,
     {
       method: "PUT",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(voteObj),
     }
   );

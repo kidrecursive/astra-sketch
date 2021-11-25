@@ -49,7 +49,7 @@ const RoundScore = () => {
           parseInt(newPlayers[player].score),
       };
     });
-    upsertPlayer(gameId, newPlayers);
+    upsertPlayer(gameId, Object.values(newPlayers));
     setTimeout(() => {
       let next = { page: constants.FINAL_PAGE, round: "" };
       if (nextRound <= constants.ROUNDS.length) {

@@ -20,7 +20,7 @@ const JoinGame = () => {
 
   const joinGame = async (e) => {
     const newGameIdUpper = newGameId.toUpperCase();
-    await upsertPlayer(newGameIdUpper, newPlayer);
+    await upsertPlayer(newGameIdUpper, {name: newPlayer});
     dispatch(setPlayer(newPlayer));
     dispatch(setId(newGameIdUpper));
     navigate(`/player/${newGameIdUpper}`);
