@@ -17,89 +17,117 @@ const client = sg.promisifyStargateClient(stargateClient);
 async function createSchema() {
   await client.executeQuery(new sg.Query().setCql(
     `CREATE TABLE IF NOT EXISTS ${keyspace}.game 
-      (game_id text, 
-       game_num int,
-       vip uuid, 
-       state text, 
-       topic_player_id uuid, 
-       PRIMARY KEY(game_id))`));
+      (id text, 
+       audience_size int, 
+       page text, 
+       request_duration int,
+       round int,
+       sketch text,
+       PRIMARY KEY(id))`));
   await client.executeQuery(new sg.Query().setCql(
     `CREATE TABLE IF NOT EXISTS ${keyspace}.players 
-      (game_id text, 
-       player_id uuid,
+      (gameid text, 
        name text, 
-       PRIMARY KEY(game_id, player_id))`));
+       vip boolean,
+       score int,
+       PRIMARY KEY(gameid, name))`));
   await client.executeQuery(new sg.Query().setCql(
-    `CREATE TABLE IF NOT EXISTS ${keyspace}.topics 
-      (game_id text, 
-       game_num int,
-       topic_player_id uuid,
-       topic text,
+    `CREATE TABLE IF NOT EXISTS ${keyspace}.sketches 
+      (gameid text, 
+       id text,
+       answered boolean,
+       player text,
+       prompt text,
+       round int,
        svg text,
-       PRIMARY KEY(game_id, game_num, topic_player_id))`));
+       PRIMARY KEY(gameid, id))`));
   await client.executeQuery(new sg.Query().setCql(
-    `CREATE TABLE IF NOT EXISTS ${keyspace}.guesses 
-      (game_id text, 
-       game_num int,
-       topic_player_id uuid,
-       player_id uuid,
-       guess text,
-       votes set<uuid>,
-       PRIMARY KEY(game_id, game_num, topic_player_id, player_id))`));
+    `CREATE TABLE IF NOT EXISTS ${keyspace}.answers 
+      (gameid text, 
+       id text,
+       player text,
+       content text,
+       sketch text,
+       PRIMARY KEY(gameid, id))`));
+  await client.executeQuery(new sg.Query().setCql(
+    `CREATE TABLE IF NOT EXISTS ${keyspace}.votes 
+      (gameid text, 
+       id text,
+       answer text,
+       player text,
+       PRIMARY KEY(gameid, id))`));
 }
 
 async function getGame(gameId) {
+  let game = {};
+
   const gameQuery = new sg.Query();
-  gameQuery.setCql(`SELECT JSON game_id, game_num, vip, topic_player_id, state FROM ${keyspace}.game WHERE game_id = '${gameId}'`);
+  gameQuery.setCql(`SELECT JSON * FROM ${keyspace}.game WHERE id = '${gameId}'`);
 
   const playerQuery = new sg.Query();
-  playerQuery.setCql(`SELECT JSON player_id, name FROM ${keyspace}.players WHERE game_id = '${gameId}'`);
+  playerQuery.setCql(`SELECT JSON name FROM ${keyspace}.players WHERE gameid = '${gameId}'`);
+
+  const sketchQuery = new sg.Query();
+  sketchQuery.setCql(`SELECT JSON id, answered, player, prompt, round, svg FROM ${keyspace}.sketches WHERE gameid = '${gameId}'`);
+
+  const answerQuery = new sg.Query();
+  answerQuery.setCql(`SELECT JSON id, content, player, sketch FROM ${keyspace}.answers WHERE gameid = '${gameId}'`);
+
+  const voteQuery = new sg.Query();
+  voteQuery.setCql(`SELECT JSON id, answer, player FROM ${keyspace}.votes WHERE gameid = '${gameId}'`);
 
   const gameRes = await client.executeQuery(gameQuery);
-  const playerRes = await client.executeQuery(playerQuery);
-
   if (gameRes.hasResultSet() && gameRes.getResultSet().getRowsList().length > 0) {
-    const game = JSON.parse(gameRes.getResultSet().getRowsList()[0].getValuesList()[0].getString());
-    const gameNum = game.game_num;
+    const gameObj = JSON.parse(gameRes.getResultSet().getRowsList()[0].getValuesList()[0].getString());
 
-    const players = [];
-    if (playerRes.hasResultSet() && playerRes.getResultSet().getRowsList().length > 0) {
-      playerRes.getResultSet().getRowsList().forEach(row => {
-        players.push(JSON.parse(row.getValuesList()[0].getString()));
-      });
-      game.players = players;
-    }
-
-    const topicsQuery = new sg.Query();
-    topicsQuery.setCql(`SELECT JSON topic_player_id, topic, svg FROM ${keyspace}.topics WHERE game_id = '${gameId}' AND game_num = ${gameNum}`);
-
-    const topicsRes = await client.executeQuery(topicsQuery);
-
-    const topics = [];
-    if (topicsRes.hasResultSet() && topicsRes.getResultSet().getRowsList().length > 0) {
-      topicsRes.getResultSet().getRowsList().forEach(row => {
-        topics.push(JSON.parse(row.getValuesList()[0].getString()));
-      });
-      game.topics = topics;
-    }
-
-    const guessesQuery = new sg.Query();
-    guessesQuery.setCql(`SELECT JSON topic_player_id, player_id, guess, votes FROM ${keyspace}.guesses WHERE game_id = '${gameId}' AND game_num = ${gameNum}`);
-
-    const guessesRes = await client.executeQuery(guessesQuery);
-
-    const guesses = [];
-    if (guessesRes.hasResultSet() && guessesRes.getResultSet().getRowsList().length > 0) {
-      guessesRes.getResultSet().getRowsList().forEach(row => {
-        guesses.push(JSON.parse(row.getValuesList()[0].getString()));
-      });
-      game.guesses = guesses;
-    }
-
-    return game;
+    gameObj.audienceSize = gameObj.audience_size;
+    delete gameObj.audience_size;
+    gameObj.requestDuration = gameObj.request_duration;
+    delete gameObj.request_duration;
+    game.game = gameObj;
   }
 
-  return {};
+  const playerRes = await client.executeQuery(playerQuery);
+  let players = {};
+  if (playerRes.hasResultSet() && playerRes.getResultSet().getRowsList().length > 0) {
+    playerRes.getResultSet().getRowsList().forEach(row => {
+      const player = JSON.parse(row.getValuesList()[0].getString());
+      players[player.name] = player;
+    });
+  }
+  game.players = players;
+
+  const sketchRes = await client.executeQuery(sketchQuery);
+  let sketches = {};
+  if (sketchRes.hasResultSet() && sketchRes.getResultSet().getRowsList().length > 0) {
+    sketchRes.getResultSet().getRowsList().forEach(row => {
+      const sketch = JSON.parse(row.getValuesList()[0].getString());
+      sketches[sketch.id] = sketch;
+    });
+  }
+  game.sketches = sketches;
+
+  const answerRes = await client.executeQuery(answerQuery);
+  let answers = {};
+  if (answerRes.hasResultSet() && answerRes.getResultSet().getRowsList().length > 0) {
+    answerRes.getResultSet().getRowsList().forEach(row => {
+      const answer = JSON.parse(row.getValuesList()[0].getString());
+      answers[answer.id] = answer;
+    });
+  }
+  game.answers = answers;
+
+  const voteRes = await client.executeQuery(voteQuery);
+  let votes = {};
+  if (voteRes.hasResultSet() && voteRes.getResultSet().getRowsList().length > 0) {
+    voteRes.getResultSet().getRowsList().forEach(row => {
+      const vote = JSON.parse(row.getValuesList()[0].getString());
+      votes[vote.id] = vote;
+    });
+  }
+  game.votes = votes;
+
+  return game;
 }
 
 module.exports.createSchema = createSchema;

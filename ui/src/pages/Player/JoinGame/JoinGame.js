@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { addPlayer } from "../../../api";
+import { upsertPlayer } from "../../../api";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Button, TextField, Grid, Box, Typography } from "@mui/material";
@@ -20,7 +20,7 @@ const JoinGame = () => {
 
   const joinGame = async (e) => {
     const newGameIdUpper = newGameId.toUpperCase();
-    await addPlayer(newGameIdUpper, newPlayer);
+    await upsertPlayer(newGameIdUpper, {name: newPlayer});
     dispatch(setPlayer(newPlayer));
     dispatch(setId(newGameIdUpper));
     navigate(`/player/${newGameIdUpper}`);

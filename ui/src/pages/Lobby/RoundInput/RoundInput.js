@@ -1,6 +1,6 @@
 import React from "react";
 import constants from "../../../constants";
-import { updateGame } from "../../../api";
+import { upsertSketch, updateGame } from "../../../api";
 import { getSvgSrc } from "../../../utils";
 import { useSelector } from "react-redux";
 import { Grid, Typography } from "@mui/material";
@@ -40,13 +40,11 @@ const RoundInput = () => {
 
   React.useEffect(async () => {
     if (shouldTransition) {
-      await updateGame(`${gameId}/sketches`, {
-        [sketch]: {
-          ...sketches[sketch],
-          answered: true,
-        },
+      await upsertSketch(gameId, {
+        ...sketches[sketch],
+        answered: true,
       });
-      await updateGame(`${gameId}/game`, {
+      await updateGame(gameId, {
         page: constants.ROUND_VOTE_PAGE,
       });
     }

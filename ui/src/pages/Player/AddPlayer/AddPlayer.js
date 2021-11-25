@@ -14,7 +14,7 @@ const AddPlayer = () => {
   const players = useSelector(selectPlayers);
   const startGame = async () => {
     setStartingGame(true);
-    await updateGame(`${gameId}/game`, { page: constants.TUTORIAL_PAGE });
+    await updateGame(gameId, { page: constants.TUTORIAL_PAGE });
   };
 
   if (players && players[player] && players[player].vip) {

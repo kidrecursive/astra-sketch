@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Typography } from "@mui/material";
 import { selectSketches } from "../../../store/sketchesSlice";
 import { selectRound, selectPlayer, selectId } from "../../../store/gameSlice";
-import { updateGame } from "../../../api";
+import { upsertSketch } from "../../../api";
 import SketchSurface from "../../../components/SketchSurface";
 import Waiting from "../Waiting";
 import _ from "lodash";
@@ -23,11 +23,9 @@ const SketchInput = () => {
   const getSvg = async (svgData) => {
     setSvg(svgData);
     setResponseSent(true);
-    await updateGame(`${gameId}/sketches`, {
-      [playerSketch.id]: {
-        ...playerSketch,
-        svg: svgData,
-      },
+    upsertSketch(gameId, {
+      ...playerSketch,
+      svg: svgData,
     });
   };
 

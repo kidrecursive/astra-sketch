@@ -4,7 +4,7 @@ import { Button, TextField, Typography } from "@mui/material";
 import { selectAnswers } from "../../../store/answersSlice";
 import { selectPlayer, selectId, selectSketch } from "../../../store/gameSlice";
 import { selectSketches } from "../../../store/sketchesSlice";
-import { updateGame } from "../../../api";
+import { upsertAnswer } from "../../../api";
 import Waiting from "../Waiting";
 import _ from "lodash";
 
@@ -23,11 +23,9 @@ const RoundInput = () => {
 
   const submitResponse = async () => {
     setResponseSent(true);
-    await updateGame(`${gameId}/answers`, {
-      [playerAnswer.id]: {
+    await upsertAnswer(gameId, {
         ...playerAnswer,
         content: response,
-      },
     });
   };
 

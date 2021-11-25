@@ -53,12 +53,12 @@ const RoundVote = () => {
 
       if (remainingSketchIds.length === 0) {
         console.log(`round complete: ${roundId}`);
-        updateGame(`${gameId}/game`, {
+        updateGame(gameId, {
           page: constants.ROUND_SCORE_PAGE,
           sketch: "",
         });
       } else {
-        updateGame(`${gameId}/game`, {
+        updateGame(gameId, {
           page: constants.ROUND_INPUT_PAGE,
           sketch: remainingSketchIds[0],
         });
