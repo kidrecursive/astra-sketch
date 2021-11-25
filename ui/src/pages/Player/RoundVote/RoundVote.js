@@ -5,7 +5,7 @@ import { getSvgSrc } from "../../../utils";
 import { selectAnswers } from "../../../store/answersSlice";
 import { selectSketches } from "../../../store/sketchesSlice";
 import { selectPlayer, selectId, selectSketch } from "../../../store/gameSlice";
-import { updateGame } from "../../../api";
+import { upsertVote } from "../../../api";
 import Waiting from "../Waiting";
 import _ from "lodash";
 
@@ -22,11 +22,9 @@ const RoundVote = () => {
   const [voted, setVoted] = React.useState(false);
 
   const sendVote = (answerId) => {
-    updateGame(`${gameId}/votes`, {
-      [`${player}-${sketch}`]: {
-        player,
-        answer: answerId,
-      },
+    upsertVote(gameId, {
+      player,
+      answer: answerId,
     });
     setVoted(true);
   };

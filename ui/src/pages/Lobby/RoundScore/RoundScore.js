@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { updateGame } from "../../../api";
+import { updateGame, upsertPlayer } from "../../../api";
 import { selectPlayers } from "../../../store/playersSlice";
 import { selectAnswers } from "../../../store/answersSlice";
 import { selectSketches } from "../../../store/sketchesSlice";
@@ -49,13 +49,13 @@ const RoundScore = () => {
           parseInt(newPlayers[player].score),
       };
     });
-    updateGame(`${gameId}/players`, newPlayers);
+    upsertPlayer(gameId, newPlayers);
     setTimeout(() => {
       let next = { page: constants.FINAL_PAGE, round: "" };
       if (nextRound <= constants.ROUNDS.length) {
         next = { page: constants.SKETCH_INPUT_PAGE, round: nextRound };
       }
-      updateGame(`${gameId}/game`, next);
+      updateGame(gameId, next);
       if (next.page === constants.FINAL_PAGE) {
         navigate("/lobby");
       }

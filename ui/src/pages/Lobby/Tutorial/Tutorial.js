@@ -1,6 +1,6 @@
 import React from "react";
 import constants from "../../../constants";
-import { updateGame } from "../../../api";
+import { upsertSketch, upsertAnswer, updateGame } from "../../../api";
 import { useSelector, useDispatch, useStore } from "react-redux";
 import { Grid, Typography } from "@mui/material";
 import { selectId } from "../../../store/gameSlice";
@@ -16,14 +16,12 @@ const Tutorial = () => {
     const setSketches = async () => {
       dispatch(initializeSketches());
       const { sketches, answers } = store.getState();
-      await updateGame(gameId, {
-        sketches,
-        answers,
-      });
+      await upsertSketch(gameId, Object.values(sketches));
+      await upsertAnswer(gameId, Object.values(answers));
     };
     setSketches();
     setTimeout(async () => {
-      await updateGame(`${gameId}/game`, {
+      await updateGame(gameId, {
         page: constants.SKETCH_INPUT_PAGE,
         round: constants.ROUNDS[0].id,
       });

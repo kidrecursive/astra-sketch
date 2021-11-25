@@ -39,7 +39,7 @@ const SketchInput = () => {
 
   React.useEffect(() => {
     if (shouldTransition) {
-      updateGame(`${gameId}/game`, {
+      updateGame(gameId, {
         page: constants.ROUND_INPUT_PAGE,
         sketch: roundSketchIds[0],
       });
