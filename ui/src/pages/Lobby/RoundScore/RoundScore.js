@@ -40,16 +40,14 @@ const RoundScore = () => {
     );
     const currentRoundId = currentRound ? currentRound.id : 0;
     const nextRound = currentRoundId + 1;
-    const newPlayers = _.cloneDeep(players);
+    const newPlayers = [];
     _.keys(roundVotes).forEach((voteId) => {
       const player = roundAnswers[roundVotes[voteId].answer].player;
-      newPlayers[player] = {
-        score:
-          constants.BASE_POINTS * currentRound.scoreMultiplier +
-          parseInt(newPlayers[player].score),
-      };
+      const newPlayer = _.cloneDeep(players[player]);
+      newPlayer.score = constants.BASE_POINTS * currentRound.scoreMultiplier + parseInt(players[player].score);
+      newPlayers.push(newPlayer);
     });
-    upsertPlayer(gameId, Object.values(newPlayers));
+    upsertPlayer(gameId, newPlayers);
     setTimeout(() => {
       let next = { page: constants.FINAL_PAGE, round: "" };
       if (nextRound <= constants.ROUNDS.length) {

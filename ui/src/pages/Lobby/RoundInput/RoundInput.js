@@ -36,7 +36,7 @@ const RoundInput = () => {
       }
     });
     setShouldTransition(transition);
-  }, [answers, sketches, roundId, gameId]);
+  }, [answers, sketches, roundId, gameId, sketch]);
 
   React.useEffect(async () => {
     if (shouldTransition) {
@@ -48,7 +48,7 @@ const RoundInput = () => {
         page: constants.ROUND_VOTE_PAGE,
       });
     }
-  }, [gameId, shouldTransition, sketches, roundId]);
+  }, [gameId, shouldTransition, sketches, roundId, sketch]);
 
   return (
     <Grid container direction="column" justify="center" alignItems="center">

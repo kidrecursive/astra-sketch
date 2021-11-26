@@ -3,11 +3,21 @@ import { Grid, Typography } from "@mui/material";
 
 const Waiting = () => {
   return (
-    <Grid item xs={12}>
-      <Typography paragraph variant="caption" sx={{ textAlign: "center" }}>
-        Hang tight!
-      </Typography>
-    </Grid>
+    <React.Fragment>
+      <Grid item xs={12}>
+        <Typography paragraph variant="caption" sx={{ textAlign: "center" }}>
+          Hang tight! View some player art while you wait...
+        </Typography>
+      </Grid>
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        // TODO: Figure out how to make this work with npm's built-in proxy
+        <img
+          alt="random!"
+          src="http://localhost:3000/svg/random.svg"
+          style={{ maxWidth: "100%", maxHeight: 400, border: '2px solid black'}}
+        />
+      </Grid>
+    </React.Fragment>
   );
 };
 

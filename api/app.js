@@ -10,6 +10,7 @@ var config = require('./config')
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var gamesRouter = require('./routes/games');
+var svgRouter = require('./routes/svg');
 var streamRouter = require('./routes/stream');
 
 createSchema();
@@ -30,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/games/", gamesRouter);
+app.use("/svg/", svgRouter);
 app.use("/stream/", streamRouter);
 
 // catch 404 and forward to error handler

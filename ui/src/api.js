@@ -87,8 +87,3 @@ export const upsertVote = async (gameId, voteObj) => {
   );
   return await res.json();
 };
-
-export const getXKCD = async () => {
-  const res = await fetch(`${apiPath}/getXKCD`);
-  return await res.json();
-};
