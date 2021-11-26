@@ -1,6 +1,7 @@
 var grpc = require('@grpc/grpc-js')
 var sg = require("@stargate-oss/stargate-grpc-node-client")
 var config = require("./config");
+var { getRandomInt } = require("./utils")
 
 const keyspace = config.KEYSPACE;
 
@@ -58,6 +59,17 @@ async function createSchema() {
        PRIMARY KEY(gameid, id))`));
 }
 
+async function getSvg() {
+  const query = new sg.Query();
+  query.setCql(`SELECT svg FROM ${keyspace}.sketches LIMIT 10`);
+  const res = await client.executeQuery(query);
+  if (res.hasResultSet() && res.getResultSet().getRowsList().length > 0) {
+    const rows = res.getResultSet().getRowsList();
+    const r = getRandomInt(rows.length); 
+    return rows[r].getValuesList()[0].getString();
+  }
+}
+
 async function getGame(gameId) {
   let game = {};
 
@@ -65,7 +77,7 @@ async function getGame(gameId) {
   gameQuery.setCql(`SELECT JSON * FROM ${keyspace}.game WHERE id = '${gameId}'`);
 
   const playerQuery = new sg.Query();
-  playerQuery.setCql(`SELECT JSON name FROM ${keyspace}.players WHERE gameid = '${gameId}'`);
+  playerQuery.setCql(`SELECT JSON name, vip, score FROM ${keyspace}.players WHERE gameid = '${gameId}'`);
 
   const sketchQuery = new sg.Query();
   sketchQuery.setCql(`SELECT JSON id, answered, player, prompt, round, svg FROM ${keyspace}.sketches WHERE gameid = '${gameId}'`);
@@ -131,5 +143,6 @@ async function getGame(gameId) {
 }
 
 module.exports.createSchema = createSchema;
+module.exports.getSvg = getSvg;
 module.exports.getGame = getGame;
 module.exports.client = client;

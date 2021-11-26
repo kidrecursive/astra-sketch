@@ -6,8 +6,6 @@ var { publishGameChange } = require('../pulsar')
 
 var router = express.Router();
 
-var grpc = require("../grpc");
-
 // Get full game state object
 router.get('/:id', function(req, res, next) {
     grpc.getGame(req.params.id).then(game => {
@@ -47,55 +45,6 @@ router.put('/:id', function(req, res, next) {
         res.status(400).render( 'error', { message: "body not provided", error: new Error("body not provided")})
     }
 });
-
-//router.put('/:id', function(req, res, next) {
-//    if (req.body) {
-//        const query = new sg.Query();
-//        let body = req.body;
-//        let update = "";
-//
-//        let values = new sg.Values();
-//
-//        if (body.hasOwnProperty('page')) {
-//            update += "page = ?"
-//            let value = new sg.Value().setString(body.page);
-//            values.addValues(value);
-//        }
-//
-//        if (body.hasOwnProperty('sketch')) {
-//            if (update.length > 0) {
-//                update += ", ";
-//            }
-//            update += "sketch = ?"
-//            let value = new sg.Value().setString(body.sketch);
-//            values.addValues(value);
-//        }
-//
-//        if (body.hasOwnProperty('round')) {
-//            if (update.length > 0) {
-//                update += ", ";
-//            }
-//            update += "round = ?"
-//            let value = new sg.Value().setInt(body.round);
-//            values.addValues(value);
-//        }
-//
-//        let id = new sg.Value().setString(req.params.id);
-//        values.addValues(id);
-//
-//        query.setCql(`UPDATE ${config.KEYSPACE}.game SET ${update} WHERE id = ?'`);
-//        query.setValues(values);
-//
-//        grpc.client.executeQuery(query).then((response) => {
-//            publishGameChange(req.params.id);
-//            res.status(200).end();
-//        }).catch((err) => {
-//            res.status(500).render('error', { message: "Error attempting to add new game", error: err });
-//        });
-//    } else {
-//        res.status(400).render( 'error', { message: "body not provided", error: new Error("body not provided")})
-//    }
-//});
 
 // Upsert player(s)
 router.put('/:id/players', function(req, res, next) {

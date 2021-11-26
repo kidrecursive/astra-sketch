@@ -1,6 +1,4 @@
 import React from "react";
-import constants from "./constants";
-import { getGame } from "./api";
 import { useSelector, useDispatch, batch } from "react-redux";
 import {
   selectId,
@@ -29,11 +27,12 @@ export const useGamePollingInterval = () => {
     if (!gameId) {
       return;
     }
-    const pollingInterval = setInterval(async () => {
-      const gameData = await getGame(`${gameId}`);
-      if (!gameData) {
-        return;
-      }
+
+    // TODO: Figure out how to make SSE work with the npm built-in proxy
+    const eventSource = new EventSource(`http://localhost:3000/stream/${gameId}`);
+    eventSource.onmessage = (event) => {
+      const gameData = JSON.parse(event.data);
+
       batch(() => {
         if (gameData.players) {
           _.keys(gameData.players).forEach((playerId) => {
@@ -58,11 +57,15 @@ export const useGamePollingInterval = () => {
           }
         });
       });
-    }, constants.POLLING_INTERVAL);
-    console.log(`interval created: ${pollingInterval}`);
+    }
+
+    eventSource.onerror = (err) => {
+      console.log("error happend during stream update " + err);
+      eventSource.close();
+    }
+
     return () => {
-      console.log(`interval destroyed: ${pollingInterval}`);
-      clearInterval(pollingInterval);
+      eventSource.close();
     };
   }, [gameId, dispatch]);
 

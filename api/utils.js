@@ -41,3 +41,4 @@ function generateTopic(existing) {
 }
 
 module.exports.generateTopic = generateTopic;
+module.exports.getRandomInt = getRandomInt;
