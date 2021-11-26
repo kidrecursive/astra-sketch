@@ -1,5 +1,6 @@
-# Astra Sketch
+# Astra Draw
 The Epic Byte's Ship Team Hackathon Submission
 
 ### Project Structure
-- ui - [create-react-app](https://github.com/facebook/create-react-app) source files
+- ui - Front-end uses React/Redux
+- api - Backend-end uses Express.js, Stargate's gRPC Node library, and Astra Streaming via websockets
