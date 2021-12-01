@@ -65,8 +65,13 @@ async function getSvg() {
   const res = await client.executeQuery(query);
   if (res.hasResultSet() && res.getResultSet().getRowsList().length > 0) {
     const rows = res.getResultSet().getRowsList();
-    const r = getRandomInt(rows.length); 
-    return rows[r].getValuesList()[0].getString();
+    var r = getRandomInt(rows.length); 
+    var svg = rows[r].getValuesList()[0].getString();
+    while(!svg && svg.length == 0) {
+      r = getRandomInt(rows.length);
+      svg = rows[r].getValuesList()[0].getString();
+    }
+    return svg;
   }
 }
 

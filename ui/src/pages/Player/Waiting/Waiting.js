@@ -10,7 +10,6 @@ const Waiting = () => {
         </Typography>
       </Grid>
       <Grid item xs={12} style={{ textAlign: "center" }}>
-        // TODO: Figure out how to make this work with npm's built-in proxy
         <img
           alt="random!"
           src="http://localhost:3000/svg/random.svg"
