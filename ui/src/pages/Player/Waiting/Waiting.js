@@ -12,8 +12,12 @@ const Waiting = () => {
       <Grid item xs={12} style={{ textAlign: "center" }}>
         <img
           alt="random!"
-          src="http://localhost:3000/svg/random.svg"
-          style={{ maxWidth: "100%", maxHeight: 400, border: '2px solid black'}}
+          src="/svg/random.svg"
+          style={{
+            maxWidth: "100%",
+            maxHeight: 400,
+            border: "2px solid black",
+          }}
         />
       </Grid>
     </React.Fragment>

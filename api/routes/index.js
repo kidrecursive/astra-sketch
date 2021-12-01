@@ -1,9 +1,9 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+// All other GET requests not handled before will return our React app
+router.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../ui/build", "index.html"));
 });
 
 module.exports = router;

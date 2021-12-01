@@ -2,7 +2,7 @@
   "name": "astra-sketch",
   "version": "0.0.1",
   "private": true,
-  "proxy": "http://localhost:3000",
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@astrajs/collections": "^0.3.1",
     "@emotion/react": "^11.6.0",
@@ -25,8 +25,8 @@
   },
   "scripts": {
     "dev": "netlify dev",
-    "start": "PORT=3001 react-scripts start",
-    "build": "react-scripts build",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006 -s public",

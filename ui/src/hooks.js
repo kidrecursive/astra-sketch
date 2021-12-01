@@ -29,7 +29,7 @@ export const useGamePollingInterval = () => {
     }
 
     // TODO: Figure out how to make SSE work with the npm built-in proxy
-    const eventSource = new EventSource(`http://localhost:3000/stream/${gameId}`);
+    const eventSource = new EventSource(`/stream/${gameId}`);
     eventSource.onmessage = (event) => {
       const gameData = JSON.parse(event.data);
 
