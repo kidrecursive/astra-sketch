@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 function envVarNotFound(name) {
   console.error(name + " environment variable required, but not found");
   process.exit(1);
